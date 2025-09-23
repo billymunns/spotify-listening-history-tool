@@ -18,7 +18,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
 #top 10 tracks
 results = sp.current_user_top_tracks(limit=10, time_range="short_term")
 
-print("🎵 Your Top 10 Tracks (last 4 weeks):")
+print("Your Top 10 Tracks (last 4 weeks):")
 for i, item in enumerate(results['items']):
     track = item['name']
     artist = item['artists'][0]['name']

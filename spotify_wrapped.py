@@ -56,13 +56,16 @@ class SpotifyWrappedApp(ctk.CTk):
                 artist = item['artists'][0]['name']
                 display_text += f"{i+1}. {track} by {artist}\n"
 
-            self.update_textbox(display_text)
+            self.after(0, self.update_textbox, display_text)
 
         except Exception as e:
-            self.update_textbox(f"Error: {str(e)}")
+            self.after(0, self.update_textbox, f"Error: {str(e)}")
         
         finally:
-            self.fetch_button.configure(state="normal", text="Fetch Top Tracks")
+            self.after(0, self.reset_button)
+
+    def reset_button(self):
+        self.fetch_button.configure(state="normal", text="Fetch Top Tracks")
 
     def update_textbox(self, text):
         self.textbox.configure(state="normal")

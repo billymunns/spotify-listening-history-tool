@@ -8,7 +8,9 @@ export function getClientId(): string {
 }
 
 export function getRedirectUri(): string {
-  return import.meta.env.VITE_REDIRECT_URI?.trim() || `${window.location.origin}/callback`
+  const fromEnv = import.meta.env.VITE_REDIRECT_URI?.trim()
+  if (fromEnv) return fromEnv.replace(/\/$/, '')
+  return `${window.location.origin}/callback`
 }
 
 function randomString(length: number): string {

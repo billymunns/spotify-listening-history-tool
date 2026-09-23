@@ -47,7 +47,9 @@ Do **not** put a Client Secret in this project. Login uses Authorization Code + 
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173` (the Vite server binds to `127.0.0.1` so it matches the redirect URI). `localhost` is a different origin to Spotify.
+Open `http://127.0.0.1:5173` (not `localhost` — Spotify treats that as a different site).
+
+If `npm run dev` says the port is already in use, stop the other terminal (`Ctrl+C`) instead of using 5174. The Spotify Redirect URI must be exactly `http://127.0.0.1:5173/callback` (click **Add**, then **Save** on the dashboard). Do not open `/callback` yourself — Spotify sends you there after you approve access.
 
 ### Friends (Development mode)
 

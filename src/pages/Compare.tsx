@@ -9,12 +9,12 @@ import { ErrorState, LoadingState } from '../components/Status.tsx'
 import { useLibrary } from '../library/LibraryContext.tsx'
 import { compareRanges } from '../stats/compare.ts'
 import { formatHoursListened, formatMinutes } from '../stats/format.ts'
-import { comparePresets, customRange } from '../stats/ranges.ts'
+import { analysisNow, comparePresets, customRange } from '../stats/ranges.ts'
 
 export function Compare() {
   const { plays, hasExport } = useLibrary()
   const { status, getToken } = useAuth()
-  const presets = useMemo(() => comparePresets(), [])
+  const presets = useMemo(() => comparePresets(analysisNow(plays)), [plays])
   const [presetIndex, setPresetIndex] = useState(0)
   const [custom, setCustom] = useState({ leftStart: '', leftEnd: '', rightStart: '', rightEnd: '' })
   const [useCustom, setUseCustom] = useState(false)

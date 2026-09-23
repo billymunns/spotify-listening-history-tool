@@ -31,6 +31,22 @@ export function coverageRange(plays: PlayEvent[]): { min: string; max: string } 
   return { min: first.timestamp, max: last.timestamp }
 }
 
+export function latestPlayDate(plays: PlayEvent[]): Date | null {
+  if (plays.length === 0) return null
+  let max = plays[0]!.timestamp
+  for (const play of plays) {
+    if (play.timestamp > max) max = play.timestamp
+  }
+  return new Date(max)
+}
+
+/** Use the end of the import when it is older than today so last-year views stay meaningful. */
+export function analysisNow(plays: PlayEvent[], now = new Date()): Date {
+  const latest = latestPlayDate(plays)
+  if (!latest) return now
+  return latest.getTime() < now.getTime() ? latest : now
+}
+
 export function exportRangePresets(now = new Date()): DateRange[] {
   const end = addDays(startOfDay(now), 1)
   return [

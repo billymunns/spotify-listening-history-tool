@@ -51,17 +51,17 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       return
     }
     void (async () => {
-      await reload(userId)
       if (authStatus === 'demo') {
-        const existing = await loadUserPlays(userId)
-        if (existing.length === 0) {
-          const sample = buildSampleHistory()
-          const nextMeta = await replaceUserHistory(userId, sample, ['sample-history.json'])
-          setPlays(sample)
-          setMeta(nextMeta)
-          setStatus('ready')
-        }
+        const sample = buildSampleHistory()
+        const nextMeta = await replaceUserHistory(userId, sample, ['sample-history.json'])
+        setPlays(sample)
+        setMeta(nextMeta)
+        setWarnings([])
+        setError(null)
+        setStatus('ready')
+        return
       }
+      await reload(userId)
     })()
   }, [userId, authStatus, reload])
 

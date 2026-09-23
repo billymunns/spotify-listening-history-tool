@@ -3,7 +3,7 @@ import type { PlayEvent } from '../import/types.ts'
 import { compareRanges } from './compare.ts'
 import { currentStreak, dailyBuckets, longestStreak } from './heatmap.ts'
 import { derivePersonalities } from './personality.ts'
-import { customRange } from './ranges.ts'
+import { analysisNow, customRange, exportRangePresets, filterRange } from './ranges.ts'
 import { discoveryMix, skipRate } from './taste.ts'
 import { summaryStats, topArtists, topTracks } from './tops.ts'
 
@@ -89,6 +89,16 @@ describe('taste helpers', () => {
     const mix = discoveryMix(sample)
     expect(mix.repeats).toBe(1)
     expect(mix.onePlay).toBe(3)
+  })
+})
+
+describe('analysis now', () => {
+  it('anchors last-year presets to the latest play when history is older than today', () => {
+    const now = new Date('2026-09-23T12:00:00.000Z')
+    const anchor = analysisNow(sample, now)
+    expect(anchor.toISOString().startsWith('2025-02-01')).toBe(true)
+    const year = exportRangePresets(anchor).find((range) => range.id === '1y')
+    expect(filterRange(sample, year ?? null).length).toBeGreaterThan(0)
   })
 })
 

@@ -40,10 +40,10 @@ function pickWeighted(rand: () => number) {
   return TRACKS[0]!
 }
 
-export function buildSampleHistory(seed = 42): PlayEvent[] {
+export function buildSampleHistory(seed = 42, now = new Date()): PlayEvent[] {
   const rand = mulberry32(seed)
-  const start = Date.UTC(2024, 0, 2, 16, 0, 0)
-  const end = Date.UTC(2025, 8, 20, 22, 0, 0)
+  const end = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 22, 0, 0)
+  const start = end - 620 * 24 * 3_600_000
   const plays: PlayEvent[] = []
   let cursor = start
 

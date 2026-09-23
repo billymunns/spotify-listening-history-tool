@@ -4,13 +4,16 @@ import { EmptyState } from '../components/EmptyState.tsx'
 import { useLibrary } from '../library/LibraryContext.tsx'
 import { busiestDay, dailyBuckets } from '../stats/heatmap.ts'
 import { derivePersonalities } from '../stats/personality.ts'
-import { exportRangePresets, filterRange } from '../stats/ranges.ts'
+import { analysisNow, exportRangePresets, filterRange } from '../stats/ranges.ts'
 import { discoveryMix, hourHistogram } from '../stats/taste.ts'
 import { formatHoursListened } from '../stats/format.ts'
 import { summaryStats, topArtists, topTracks } from '../stats/tops.ts'
 export function Wrapped() {
   const { plays, hasExport } = useLibrary()
-  const yearRange = useMemo(() => exportRangePresets().find((range) => range.id === '1y') ?? null, [])
+  const yearRange = useMemo(
+    () => exportRangePresets(analysisNow(plays)).find((range) => range.id === '1y') ?? null,
+    [plays],
+  )
   const slice = useMemo(() => filterRange(plays, yearRange), [plays, yearRange])
   const slides = useMemo(() => buildSlides(slice), [slice])
   const [index, setIndex] = useState(0)

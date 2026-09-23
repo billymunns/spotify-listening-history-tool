@@ -9,7 +9,7 @@ import { RankList, SpotifyRankList } from '../components/RankList.tsx'
 import { ErrorState, LoadingState } from '../components/Status.tsx'
 import { useLibrary } from '../library/LibraryContext.tsx'
 import { formatCount, formatHoursListened } from '../stats/format.ts'
-import { exportRangePresets, filterRange } from '../stats/ranges.ts'
+import { analysisNow, exportRangePresets, filterRange } from '../stats/ranges.ts'
 import { hourHistogram } from '../stats/taste.ts'
 import { summaryStats, topArtists, topTracks } from '../stats/tops.ts'
 
@@ -52,7 +52,7 @@ export function Dashboard() {
     }
   }, [authStatus, apiRange, getToken])
 
-  const presets = useMemo(() => exportRangePresets(), [])
+  const presets = useMemo(() => exportRangePresets(analysisNow(plays)), [plays])
   const activeExportRange = presets.find((range) => range.id === exportRangeId) ?? presets[2] ?? null
   const exportSlice = useMemo(() => filterRange(plays, activeExportRange), [plays, activeExportRange])
   const summary = useMemo(() => summaryStats(exportSlice), [exportSlice])

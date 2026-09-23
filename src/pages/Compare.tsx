@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getTopArtists, getTopTracks, imageUrl } from '../api/spotify.ts'
+import { getTopArtists, getTopTracks, trackRankItem } from '../api/spotify.ts'
 import type { SpotifyArtist, SpotifyTimeRange, SpotifyTrack } from '../api/types.ts'
 import { TIME_RANGE_LABELS } from '../api/types.ts'
 import { useAuth } from '../auth/AuthContext.tsx'
@@ -211,14 +211,7 @@ function ApiCompare({ getToken }: { getToken: () => Promise<string> }) {
           {API_RANGES.map((range) => (
             <Card key={range}>
               <h3 className="mb-3 text-sm uppercase tracking-wide text-muted">{TIME_RANGE_LABELS[range]}</h3>
-              <SpotifyRankList
-                items={data[range].tracks.map((track) => ({
-                  id: track.id,
-                  title: track.name,
-                  subtitle: track.artists.map((artist) => artist.name).join(', '),
-                  image: imageUrl(track.album.images),
-                }))}
-              />
+              <SpotifyRankList items={data[range].tracks.map(trackRankItem)} />
             </Card>
           ))}
         </div>

@@ -43,7 +43,7 @@ export function Taste() {
           const tracks = await getTracksByIds(token, ids)
           const buckets = new Map<string, number>()
           for (const track of tracks) {
-            const year = Number(track.album.release_date.slice(0, 4))
+            const year = Number(track.album?.release_date?.slice(0, 4))
             if (!Number.isFinite(year)) continue
             const era = year < 1990 ? 'Classic' : year < 2000 ? '90s' : year < 2010 ? '2000s' : year < 2020 ? '2010s' : '2020s'
             buckets.set(era, (buckets.get(era) ?? 0) + 1)

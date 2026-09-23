@@ -102,11 +102,11 @@ export function discoveryMix(plays: PlayEvent[]): { onePlay: number; repeats: nu
   }
 }
 
-export function mergeGenres(artists: { name: string; genres: string[] }[], limit = 12): GenrePoint[] {
+export function mergeGenres(artists: { name: string; genres?: string[] }[], limit = 12): GenrePoint[] {
   const weights = new Map<string, number>()
   artists.forEach((artist, index) => {
     const weight = Math.max(1, artists.length - index)
-    for (const genre of artist.genres) {
+    for (const genre of artist.genres ?? []) {
       weights.set(genre, (weights.get(genre) ?? 0) + weight)
     }
   })

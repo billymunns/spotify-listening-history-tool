@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { getRecentlyPlayed, getTopArtists, getTopTracks, imageUrl } from '../api/spotify.ts'
+import { artistRankItem, getRecentlyPlayed, getTopArtists, getTopTracks, imageUrl, trackRankItem } from '../api/spotify.ts'
 import type { SpotifyArtist, SpotifyPlayHistory, SpotifyTimeRange, SpotifyTrack } from '../api/types.ts'
 import { TIME_RANGE_LABELS } from '../api/types.ts'
 import { useAuth } from '../auth/AuthContext.tsx'
@@ -150,36 +150,27 @@ export function Dashboard() {
           <div className="grid gap-4 lg:grid-cols-2">
             <Card>
               <h2 className="mb-4 font-display text-2xl">Spotify top tracks</h2>
-              <SpotifyRankList
-                items={tracks.map((track) => ({
-                  id: track.id,
-                  title: track.name,
-                  subtitle: track.artists.map((artist) => artist.name).join(', '),
-                  image: imageUrl(track.album.images),
-                }))}
-              />
+              <SpotifyRankList items={tracks.map(trackRankItem)} />
             </Card>
             <Card>
               <h2 className="mb-4 font-display text-2xl">Spotify top artists</h2>
-              <SpotifyRankList
-                items={artists.map((artist) => ({
-                  id: artist.id,
-                  title: artist.name,
-                  subtitle: artist.genres.slice(0, 2).join(', ') || 'Artist',
-                  image: imageUrl(artist.images),
-                }))}
-              />
+              <SpotifyRankList items={artists.map(artistRankItem)} />
             </Card>
           </div>
           <Card>
             <h2 className="mb-4 font-display text-2xl">Recently played</h2>
             <SpotifyRankList
-              items={recent.map((item) => ({
-                id: `${item.track.id}-${item.played_at}`,
-                title: item.track.name,
-                subtitle: new Date(item.played_at).toLocaleString(),
-                image: imageUrl(item.track.album.images),
-              }))}
+              items={recent.flatMap((item) => {
+                if (!item.track) return []
+                return [
+                  {
+                    id: `${item.track.id}-${item.played_at}`,
+                    title: item.track.name,
+                    subtitle: new Date(item.played_at).toLocaleString(),
+                    image: imageUrl(item.track.album?.images),
+                  },
+                ]
+              })}
             />
           </Card>
         </section>

@@ -26,22 +26,22 @@ export function getMe(token: string): Promise<SpotifyUser> {
 }
 
 export function getTopTracks(token: string, timeRange: SpotifyTimeRange, limit = 20): Promise<SpotifyTrack[]> {
-  return request<{ items: SpotifyTrack[] }>(
+  return request<{ items?: (SpotifyTrack | null)[] }>(
     token,
     `/me/top/tracks?time_range=${timeRange}&limit=${limit}`,
-  ).then((data) => data.items)
+  ).then((data) => (data.items ?? []).filter((track): track is SpotifyTrack => !!track?.id))
 }
 
 export function getTopArtists(token: string, timeRange: SpotifyTimeRange, limit = 20): Promise<SpotifyArtist[]> {
-  return request<{ items: SpotifyArtist[] }>(
+  return request<{ items?: (SpotifyArtist | null)[] }>(
     token,
     `/me/top/artists?time_range=${timeRange}&limit=${limit}`,
-  ).then((data) => data.items)
+  ).then((data) => (data.items ?? []).filter((artist): artist is SpotifyArtist => !!artist?.id))
 }
 
 export function getRecentlyPlayed(token: string, limit = 50): Promise<SpotifyPlayHistory[]> {
-  return request<{ items: SpotifyPlayHistory[] }>(token, `/me/player/recently-played?limit=${limit}`).then(
-    (data) => data.items,
+  return request<{ items?: SpotifyPlayHistory[] }>(token, `/me/player/recently-played?limit=${limit}`).then(
+    (data) => (data.items ?? []).filter((item) => item.track?.id),
   )
 }
 
@@ -58,6 +58,25 @@ export function uriToId(uri: string | null): string | null {
   return parts[2] ?? null
 }
 
-export function imageUrl(images: { url: string }[] | undefined): string | null {
-  return images?.[0]?.url ?? images?.[images.length - 1]?.url ?? null
+export function imageUrl(images: { url: string }[] | undefined | null): string | null {
+  if (!images || images.length === 0) return null
+  return images[0]?.url ?? images[images.length - 1]?.url ?? null
+}
+
+export function trackRankItem(track: SpotifyTrack): { id: string; title: string; subtitle: string; image: string | null } {
+  return {
+    id: track.id,
+    title: track.name,
+    subtitle: (track.artists ?? []).map((artist) => artist.name).filter(Boolean).join(', ') || 'Unknown artist',
+    image: imageUrl(track.album?.images),
+  }
+}
+
+export function artistRankItem(artist: SpotifyArtist): { id: string; title: string; subtitle: string; image: string | null } {
+  return {
+    id: artist.id,
+    title: artist.name,
+    subtitle: (artist.genres ?? []).slice(0, 2).join(', ') || 'Artist',
+    image: imageUrl(artist.images),
+  }
 }

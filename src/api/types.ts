@@ -10,27 +10,27 @@ export type SpotifyTimeRange = 'short_term' | 'medium_term' | 'long_term'
 export type SpotifyArtist = {
   id: string
   name: string
-  genres: string[]
-  images: { url: string }[]
-  popularity: number
+  genres?: string[]
+  images?: { url: string }[]
+  popularity?: number
 }
 
 export type SpotifyTrack = {
   id: string
   name: string
   uri: string
-  duration_ms: number
-  album: {
+  duration_ms?: number
+  album?: {
     name: string
-    release_date: string
-    images: { url: string }[]
+    release_date?: string
+    images?: { url: string }[]
   }
-  artists: { id: string; name: string }[]
+  artists?: { id: string; name: string }[]
 }
 
 export type SpotifyPlayHistory = {
   played_at: string
-  track: SpotifyTrack
+  track: SpotifyTrack | null
 }
 
 export const TIME_RANGE_LABELS: Record<SpotifyTimeRange, string> = {

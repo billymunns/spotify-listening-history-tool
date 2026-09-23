@@ -68,7 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       const existing = readSession()
       if (!existing) {
-        setStatus('anon')
+        if (!cancelled) {
+          setStatus((current) => (current === 'authed' ? current : 'anon'))
+        }
         return
       }
       try {

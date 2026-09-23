@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AppErrorBoundary } from './components/AppErrorBoundary.tsx'
 import { AuthProvider } from './auth/AuthContext.tsx'
 import { Layout } from './components/Layout.tsx'
 import { LibraryProvider } from './library/LibraryContext.tsx'
@@ -17,6 +18,7 @@ export default function App() {
     <AuthProvider>
       <LibraryProvider>
         <BrowserRouter>
+          <AppErrorBoundary>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/callback" element={<Callback />} />
@@ -32,6 +34,7 @@ export default function App() {
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </AppErrorBoundary>
         </BrowserRouter>
       </LibraryProvider>
     </AuthProvider>
